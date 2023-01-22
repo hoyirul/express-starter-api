@@ -1,6 +1,7 @@
 {
   "name": "express-restful-template",
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "author": "Mochammad Hairullah",
   "private": true,
   "scripts": {
     "start": "nodemon ./bin/www"
