@@ -1,5 +1,5 @@
 const Validator = require('fastest-validator');
-const { Example } = require('./../../models');
+const { Example } = require('../../models');
 const v = new Validator();
 
 // for get all data from examples table
