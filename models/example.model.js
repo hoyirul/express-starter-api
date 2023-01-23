@@ -1,6 +1,3 @@
-const moment = require('moment');
-let datetime = moment().format('yyyy-MM-DD H:m:s');
-
 module.exports = (sequelize, DataTypes) => {
     const Example = sequelize.define('Example', {
         id: {
