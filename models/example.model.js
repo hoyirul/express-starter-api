@@ -13,15 +13,14 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.TEXT,
             allowNull: true,
         },
-        created_at: {
+        createdAt: {
             type: DataTypes.DATE,
         },
-        updated_at: {
+        updatedAt: {
             type: DataTypes.DATE,
         }
     }, {
         tableName: 'examples',
-        underscored: true,
     });
 
     return Example;

@@ -1,7 +1,6 @@
 ## Installation
 
 - <kbd>~$ npm install -g express-generator</kbd>
-- <kbd>~$ npm install -g express-generator</kbd>
 - <kbd>~$ express --no-view your-project</kbd>
 - <kbd>~$ npm install -g nodemon</kbd>
 - After install nodemon you should run project with <kbd>your-project$ nodemon bin/www</kbd>
