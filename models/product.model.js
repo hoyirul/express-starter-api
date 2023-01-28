@@ -1,7 +1,7 @@
 module.exports = (sequelize, DataTypes) => {
-    const Category = sequelize.define('Category', { timestamps: false });
-    const Order = sequelize.define('Order', { timestamps: false });
-    const Product = sequelize.define('Product', {
+    const Category = sequelize.define('category', { timestamps: false });
+    const Order = sequelize.define('order', { timestamps: false });
+    const Product = sequelize.define('product', {
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
@@ -21,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
         productName: {
             type: DataTypes.STRING(50),
             allowNull: false,
+            field: 'productName'
         },
         description: {
             type: DataTypes.TEXT,

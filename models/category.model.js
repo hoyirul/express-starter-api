@@ -1,14 +1,15 @@
 module.exports = (sequelize, DataTypes) => {
-    const Product = sequelize.define('Product', { timestamps: false });
-    const Category = sequelize.define('Category', {
+    const Product = sequelize.define('product', { timestamps: false });
+    const Category = sequelize.define('category', {
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true,
         },
-        category: {
+        category_name: {
             type: DataTypes.STRING,
             allowNull: false,
+            field: 'category_name'
         },
         createdAt: {
             type: DataTypes.DATE,
