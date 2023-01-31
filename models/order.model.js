@@ -40,6 +40,7 @@ module.exports = (sequelize, DataTypes) => {
         }
     }, {
         tableName: 'orders',
+        underscored: true
     });
 
     Order.belongsTo(Product);

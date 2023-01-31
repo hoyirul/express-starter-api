@@ -36,10 +36,12 @@ router.delete('/roles/:id', roleController.destroy);
 router.get('/products/by_category', productController.getCountProduct);
 
 // For order API
+router.get('/orders', orderController.paginationTest);
 router.get('/products/by_order', orderController.getCountProductByOrder);
 router.get('/orders/monthly', orderController.getTotalOrderByYear);
 
 // For user API
-router.get('/users', userController.index);
+// router.get('/users', userController.index);
+router.get('/users', userController.paginationTestUsers);
 
 module.exports = router;
