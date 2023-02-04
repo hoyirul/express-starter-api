@@ -6,6 +6,7 @@ const productController = require('../controllers/api/product.controller');
 const orderController = require('../controllers/api/order.controller');
 const userController = require('../controllers/api/user.controller');
 const roleController = require('../controllers/api/role.controller');
+const differentController = require('../controllers/api/different.controller');
 
 // METHOD : GET 
 router.get('/examples', exampleController.index);
@@ -41,7 +42,10 @@ router.get('/products/by_order', orderController.getCountProductByOrder);
 router.get('/orders/monthly', orderController.getTotalOrderByYear);
 
 // For user API
-// router.get('/users', userController.index);
+router.get('/users/all', userController.index);
 router.get('/users', userController.paginationTestUsers);
+
+// Test double connect
+router.get('/different', differentController.index);
 
 module.exports = router;
