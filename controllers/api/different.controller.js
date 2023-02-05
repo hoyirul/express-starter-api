@@ -4,10 +4,10 @@ const connect = require('./../../config/connection');
 const index = async (req, res) => {
     try{
         const response = [];
-        // energy
+        // energies
         const sql = "select date_format(description, '%m-%Y') as month, pln, solar from energy_monthly";
         const energy = await connect.energyDB.query(sql, { type: QueryTypes.SELECT });
-        // util
+        // utils
         const util = await connect.utilDB.query("select date_format(month, '%m-%Y') as month, " + 
         "filled_bottle_350 from filled_bottle", 
         { type: QueryTypes.SELECT });
