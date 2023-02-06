@@ -30,6 +30,10 @@ const index = async (req, res) => {
     }
 }
 
+const show = async (req, res) => {
+    
+}
+
 module.exports = {
-    index
+    index, show
 }
