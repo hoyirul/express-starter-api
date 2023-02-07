@@ -34,6 +34,10 @@ const show = async (req, res) => {
     
 }
 
+const destroy = async (req, res) => {
+
+}
+
 module.exports = {
-    index, show
+    index, show, destroy
 }
