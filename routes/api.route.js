@@ -38,7 +38,7 @@ router.get('/products/by_category', productController.getCountProduct);
 
 // For order API
 router.post('/orders', orderController.orderGroupDynamic);
-router.get('/orders', orderController.paginationTest);
+router.get('/ordersall', orderController.orderAll);
 router.get('/products/by_order', orderController.getCountProductByOrder);
 router.get('/orders/monthly', orderController.getTotalOrderByYear);
 

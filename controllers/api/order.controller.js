@@ -45,13 +45,13 @@ const paginationTest = (req, res) => {
 
 const orderGroupDynamic = async (req, res) => {
     try{
-        const tahun = req.body.tahun || req.query.tahun;
+        const tahun = req.body.year || req.query.year;
         const awal = tahun + "-01-01";
         const akhir = tahun + "-12-31";
         const response = await order.findAll({
             group: ["year"],
-            attributes: [["YEAR(orderDate)", "month"], ["SUM(total)", "total"]],
-            where: { bulan: { [Op.between]: [awal, akhir] } }
+            attributes: [["YEAR(orderDate)", "year"], ["SUM(total)", "total"]],
+            where: { orderDate: { [Op.between]: [awal, akhir] } }
         });
 
         return res.status(201).json(response);
@@ -62,6 +62,21 @@ const orderGroupDynamic = async (req, res) => {
     }
 }
 
+const orderAll = async (req, res) => {
+    try{
+        const response = await order.findAll({
+            group: ["year"],
+            attributes: [["YEAR(orderDate)", "year"], ["SUM(total)", "total"]]
+        });
+
+        return res.status(200).json(response);
+    }catch(error){
+        return res.status(500).json({
+            error: error.message 
+        });
+    }
+}
+
 module.exports = {
-    getCountProductByOrder, getTotalOrderByYear, paginationTest, orderGroupDynamic
+    getCountProductByOrder, getTotalOrderByYear, paginationTest, orderGroupDynamic, orderAll
 }
