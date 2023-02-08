@@ -1,4 +1,5 @@
-const { order, product, Sequelize } = require('./../../models');
+const { Op } = require('sequelize');
+const { order, product, Sequelize, sequelize } = require('./../../models');
 
 // get count Order by category
 const getCountProductByOrder = async (req, res) => {
@@ -42,6 +43,25 @@ const paginationTest = (req, res) => {
     });
 }
 
+const orderGroupDynamic = async (req, res) => {
+    try{
+        const tahun = req.body.tahun || req.query.tahun;
+        const awal = tahun + "-01-01";
+        const akhir = tahun + "-12-31";
+        const response = await order.findAll({
+            group: ["year"],
+            attributes: [["YEAR(orderDate)", "month"], ["SUM(total)", "total"]],
+            where: { bulan: { [Op.between]: [awal, akhir] } }
+        });
+
+        return res.status(201).json(response);
+    }catch(error){
+        return res.status(500).json({
+            error: error.message 
+        });
+    }
+}
+
 module.exports = {
-    getCountProductByOrder, getTotalOrderByYear, paginationTest
+    getCountProductByOrder, getTotalOrderByYear, paginationTest, orderGroupDynamic
 }
