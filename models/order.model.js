@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
             autoIncrement: true,
             allowNull: false,
         },
-        product_id: {
+        productId: {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
                 key: 'id'
             }
         },
-        order_date: {
+        orderDate: {
             type: DataTypes.DATE,
             allowNull: false,
         },
@@ -40,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
         }
     }, {
         tableName: 'orders',
-        underscored: true
+        // underscored: true
     });
 
     Order.belongsTo(Product);
