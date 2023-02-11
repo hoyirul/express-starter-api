@@ -30,6 +30,10 @@ const index = async (req, res) => {
     }
 }
 
+const store = async (req, res) => {
+    
+}
+
 const show = async (req, res) => {
     
 }
