@@ -47,5 +47,5 @@ const destroy = async (req, res) => {
 }
 
 module.exports = {
-    index, show, update, destroy
+    index, store, show, update, destroy
 }
