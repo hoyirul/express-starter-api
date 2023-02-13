@@ -31,7 +31,13 @@ const index = async (req, res) => {
 }
 
 const store = async (req, res) => {
-    
+    try{
+        // your function
+    }catch(error){
+        return res.status(500).json({
+            error: error.message
+        })
+    }
 }
 
 const show = async (req, res) => {
