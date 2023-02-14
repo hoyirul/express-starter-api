@@ -41,15 +41,33 @@ const store = async (req, res) => {
 }
 
 const show = async (req, res) => {
-    
+    try{
+        // your function
+    }catch(error){
+        return res.status(500).json({
+            error: error.message
+        })
+    }
 }
 
 const update = async (req, res) => {
-    
+    try{
+        // your function
+    }catch(error){
+        return res.status(500).json({
+            error: error.message
+        })
+    }
 }
 
 const destroy = async (req, res) => {
-
+    try{
+        // your function
+    }catch(error){
+        return res.status(500).json({
+            error: error.message
+        })
+    }
 }
 
 module.exports = {
