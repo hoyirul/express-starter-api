@@ -48,5 +48,6 @@ router.get('/users', userController.paginationTestUsers);
 
 // Test double connect
 router.get('/different', differentController.index);
+router.post('/different', differentController.store);
 
 module.exports = router;
