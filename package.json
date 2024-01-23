@@ -10,13 +10,18 @@
     "bcryptjs": "^2.4.3",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
+    "crypto-js": "^4.2.0",
     "debug": "~2.6.9",
-    "dotenv": "^16.0.3",
+    "dotenv": "^16.3.1",
     "express": "~4.16.1",
-    "fastest-validator": "^1.16.0",
+    "express-group-routes": "^1.1.0",
+    "fastest-validator": "^1.17.0",
+    "jsonwebtoken": "^9.0.2",
     "morgan": "~1.9.1",
-    "mysql2": "^3.0.1",
-    "sequelize": "^6.28.0",
-    "sequelize-cli": "^6.5.2"
+    "mysql2": "^3.2.0",
+    "node-cron": "^3.0.3",
+    "nodemon": "^3.0.1",
+    "sequelize": "^6.34.0",
+    "sequelize-cli": "^6.6.2"
   }
 }

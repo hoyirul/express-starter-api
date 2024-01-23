@@ -1,5 +1,7 @@
 var express = require('express');
 var router = express.Router();
+const { authJwt, verifySignUp } = require("../middlewares");
+const authcontroller = require("./../controllers/api/auth.controller");
 const exampleController = require('../controllers/api/example.controller');
 const categoryController = require('../controllers/api/category.controller');
 const productController = require('../controllers/api/product.controller');
@@ -7,6 +9,19 @@ const orderController = require('../controllers/api/order.controller');
 const userController = require('../controllers/api/user.controller');
 const roleController = require('../controllers/api/role.controller');
 const differentController = require('../controllers/api/different.controller');
+
+// For auth API
+router.post(
+  "/auth/signup",
+  [
+      verifySignUp.checkDuplicateEmail,
+      verifySignUp.checkRolesExisted
+  ],
+  authcontroller.signup
+);
+
+router.post("/auth/signin", authcontroller.signin);
+router.post("/auth/signout", authJwt.verifyToken, authcontroller.signout);
 
 // METHOD : GET 
 router.get('/examples', exampleController.index);

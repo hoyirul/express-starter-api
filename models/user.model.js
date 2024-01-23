@@ -38,12 +38,14 @@ module.exports = (sequelize, DataTypes) => {
     created_at: {
       type: DataTypes.DATE,
       allowNull: false,
-      field: 'created_at'
+      field: 'created_at',
+      defaultValue: DataTypes.NOW
     },
     updated_at: {
       type: DataTypes.DATE,
       allowNull: false,
-      field: 'updated_at'
+      field: 'updated_at',
+      defaultValue: DataTypes.NOW
     }
   }, {
     tableName: 'users',

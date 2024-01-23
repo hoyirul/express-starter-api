@@ -1,4 +1,4 @@
-const { getPagingData, getPagination } = require('../../middleware/pagination.middleware');
+const { getPagingData, getPagination } = require('../../middlewares/pagination.middleware');
 const { user } = require('./../../models');
 
 // for get all data from user table
