@@ -1,6 +1,7 @@
 const Validator = require('fastest-validator');
 const { role, user } = require('./../../models');
 const v = new Validator();
+const apiResponse = require("./../../traits/api-response");
 
 const config = require("./../../config/auth.config");
 
@@ -9,51 +10,37 @@ var bcrypt = require("bcryptjs");
 
 module.exports = {
   signup: (req, res) => {
-    // validation
-    const schema = {
-      name: { type: "string", empty: false },
-      email: { type: "email", empty: false },
-      password: { type: "string", empty: false },
-      roles: { type: "string", empty: false }
-    }
+    try{
+      // validation
+      const schema = {
+        name: { type: "string", empty: false },
+        email: { type: "email", empty: false },
+        password: { type: "string", empty: false },
+        roles: { type: "string", empty: false }
+      }
 
-    const validate = v.validate(req.body, schema);
+      const validate = v.validate(req.body, schema);
 
-    if (validate.length) {
-      return res.status(400).json({
-        message: validate
+      if (validate.length) {
+        return apiResponse.errors(res, { message: validate }, 422);
+      }
+
+      // Save User to Database
+      user.create({
+        name: req.body.name,
+        email: req.body.email,
+        password: bcrypt.hashSync(req.body.password, 8),
+        role_id: req.body.roles
+      }).then(users => {
+        return apiResponse.success(res, {
+          message: "User was registered successfully!"
+        }, 200);
+      }).catch(err => {
+        return apiResponse.errors(res, { message: err.message }, 500);
       });
+    } catch (err) {
+      return apiResponse.errors(res, { message: err.message }, 500);
     }
-
-    // Save User to Database
-    user.create({
-      name: req.body.name,
-      email: req.body.email,
-      password: bcrypt.hashSync(req.body.password, 8)
-    })
-      .then(users => {
-        if (req.body.roles) {
-          role.findAll({
-            where: {
-              name: {
-                [Op.or]: req.body.roles
-              }
-            }
-          }).then(roles => {
-            users.setRoles(roles).then(() => {
-              return res.status(200).json({ message: "User was registered successfully!" });
-            });
-          });
-        } else {
-          // user role = 1
-          users.setRoles([1]).then(() => {
-            return res.status(200).json({ message: "User was registered successfully!" });
-          });
-        }
-      })
-      .catch(err => {
-        return res.status(500).json({ message: err.message });
-      });
   },
 
   signin: (req, res) => {
@@ -66,9 +53,7 @@ module.exports = {
     const validate = v.validate(req.body, schema);
 
     if (validate.length) {
-      return res.status(400).json({
-        message: validate
-      });
+      return apiResponse.errors(res, { message: validate }, 422);
     }
 
     user.findOne({
@@ -77,7 +62,7 @@ module.exports = {
       }
     }).then(user => {
       if (!user) {
-        return res.status(404).json({ message: "User Not found." });
+        return apiResponse.errors(res, { message: "User Not found." }, 404);
       }
 
       var passwordIsValid = bcrypt.compareSync(
@@ -86,10 +71,7 @@ module.exports = {
       );
 
       if (!passwordIsValid) {
-        return res.status(401).json({
-          accessToken: null,
-          message: "Invalid Password!"
-        });
+        return apiResponse.errors(res, { message: "Invalid Password!" }, 401);
       }
 
       var token = jwt.sign({ id: user.id }, config.secret, {
@@ -103,17 +85,17 @@ module.exports = {
         }
       }).then(roles => {
         authorities.push("ROLE_" + roles.role.toUpperCase());
-        return res.status(200).json({
+        return apiResponse.success(res, {
           id: user.id,
           name: user.name,
           email: user.email,
           roles: authorities,
           token_type: 'Bearer',
           access_token: token
-        });
+        }, 200);
       });
     }).catch(err => {
-      return res.status(500).json({ message: err.message });
+      return apiResponse.errors(res, { message: err.message }, 500);
     });
   },
 
@@ -121,7 +103,7 @@ module.exports = {
     try {
       const bearerHeader = req.headers["authorization"];
       if (!bearerHeader) {
-        return apiResponse.errors(res, { message: "No token provided!" }, 401);
+        return apiResponse.errors(res, { message: "No token provided." }, 401);
       }
       const bearer = bearerHeader.split(" ");
       const token = bearer[1];
@@ -132,18 +114,18 @@ module.exports = {
 
       const decoded = jwt.verify(token, config.secret);
       const data = decoded;
-      const user = await User.findOne({ where: { token: token, email: data.email } });
+      const users = await user.findOne({ where: { token: token, email: data.email } });
 
       if (user === null) {
         return apiResponse.errors(res, { message: "Unauthorized" }, 401);
       }
 
-      await user.update({ token: "", updated_at: new Date() });
+      await users.update({ token: "", updated_at: new Date() });
 
       return apiResponse.success(res, {
         token: null,
         logged_in: false,
-        user: user,
+        user: users,
         message: "Sign Out Success!"
       }, 200);
     } catch (err) {
@@ -153,11 +135,10 @@ module.exports = {
 
   // for get all data from examples table
   index: async (req, res) => {
-    const response = await User.findAll({include: Role});
+    const response = await User.findAll({include: role});
 
-    res.status(200).json({
-      message: true,
+    return apiResponse.success(res, {
       data: response
-    });
+    }, 200);
   }
 };

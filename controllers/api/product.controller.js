@@ -1,16 +1,22 @@
-const { product, category, Sequelize } = require('./../../models');
-
-// get count product by category
-const getCountProduct = async (req, res) => {
-    const response = await product.findAll({
-        group: ['product.categoryId'],
-        attributes: ['category.category_name', [Sequelize.fn('COUNT', 'product.categoryId'), 'count']],
-        include: [{attributes: ['category_name'], model: category}]
-    });
-
-    res.status(200).json(response);
-}
+const { product, category, Sequelize } = require("./../../models");
+const apiResponse = require("./../../traits/api-response");
 
 module.exports = {
-    getCountProduct,
-}
+  // get count product by category
+  getCountProduct: async (req, res) => {
+    try{
+      const response = await product.findAll({
+        group: ["product.categoryId"],
+        attributes: [
+          "category.category_name",
+          [Sequelize.fn("COUNT", "product.categoryId"), "count"],
+        ],
+        include: [{ attributes: ["category_name"], model: category }],
+      });
+  
+      return apiResponse.success(res, response, 200);
+    } catch (err) {
+      return apiResponse.errors(res, { message: err.message }, 500);
+    }
+  },
+};

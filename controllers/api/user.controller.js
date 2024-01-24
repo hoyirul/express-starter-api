@@ -1,34 +1,52 @@
-const { getPagingData, getPagination } = require('../../middlewares/pagination.middleware');
-const { user } = require('./../../models');
-
-// for get all data from user table
-const index = async (req, res) => {
-    const response = await user.findAll({
-        attributes: ['id', 'name', 'email', 'password', 'role_id', 'created_at', 'updated_at']
-    });
-
-    res.status(200).json(response);
-}
-
-const paginationTestUsers = (req, res) => {
-    const { page, size } = req.query;
-    // var condition = productId ? { productId: { [Op.like]: `%${productId}%` } } : null;
-
-    const { limit, offset } = getPagination(page, size);
-
-    user.findAndCountAll({ limit, offset, attributes: ['id', 'name', 'email', 'role_id', 'created_at'] })
-    .then(data => {
-      const response = getPagingData(page, limit, data);
-      res.send(response);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving tutorials."
-      });
-    });
-}
+const {
+  getPagingData,
+  getPagination,
+} = require("../../middlewares/pagination.middleware");
+const { user } = require("./../../models");
+const apiResponse = require("./../../traits/api-response");
 
 module.exports = {
-    index, paginationTestUsers
-}
+  // for get all data from user table
+  index: async (req, res) => {
+    try{
+      const response = await user.findAll({
+        attributes: [
+          "id",
+          "name",
+          "email",
+          "password",
+          "role_id",
+          "created_at",
+          "updated_at",
+        ],
+      });
+  
+      return apiResponse.success(res, response, 200);
+    } catch (err) {
+      return apiResponse.errors(res, { message: err.message }, 500);
+    }
+  },
+
+  paginationTestUsers: async (req, res) => {
+    try{
+      const { page, size } = req.query;
+      const { limit, offset } = getPagination(page, size);
+
+      await user
+        .findAndCountAll({
+          limit,
+          offset,
+          attributes: ["id", "name", "email", "role_id", "created_at"],
+        })
+        .then((data) => {
+          const response = getPagingData(page, limit, data);
+          return apiResponse.success(res, response, 200);
+        })
+        .catch((err) => {
+          return apiResponse.errors(res, { message: err.message }, 500);
+        });
+    } catch (err) {
+      return apiResponse.errors(res, { message: err.message }, 500);
+    }
+  },
+};

@@ -1,27 +1,31 @@
-const Sequelize = require('sequelize');
-require('dotenv').config();
+const { Sequelize } = require('sequelize');
+const config = require('./config');
 
-const {
-    DB_ENERGY_USERNAME,
-    DB_ENERGY_PASSWORD,
-    DB_ENERGY_NAME,
-    DB_UTIL_USERNAME,
-    DB_UTIL_PASSWORD,
-    DB_UTIL_NAME,
-    DB_HOST,
-    DB_DIALECT,
-} = process.env;
+const db = (database) => {
+  const server = {
+    database: config[database].database,
+    username: config[database].username,
+    password: config[database].password,
+    config: config[database]
+  };
 
-const energyDB = new Sequelize(DB_ENERGY_NAME, DB_ENERGY_USERNAME, DB_ENERGY_PASSWORD, {
-    host: DB_HOST,
-    dialect: DB_DIALECT,
-    logging: false
-});
+  return new Sequelize(server.database, server.username, server.password, server.config);
+}
 
-const utilDB = new Sequelize(DB_UTIL_NAME, DB_UTIL_USERNAME, DB_UTIL_PASSWORD, {
-    host: DB_HOST, 
-    dialect: DB_DIALECT,
-    logging: false
-});
+// MYSQL
+// Server Local
+module.exports = {
+  checkDatabaseConnection: async (sequelize) => {
+    try {
+      await sequelize.authenticate();
+      console.log('Database connected successfully.');
+    } catch (error) {
+      console.error('Error connecting to database:', error.message);
+    }
+  },
 
-module.exports = { energyDB, utilDB };
+  db_dev: db('development'),
+  db_test: db('test'),
+  db_prod: db('production'),
+  your_other_db: db('your_other_database')
+};
