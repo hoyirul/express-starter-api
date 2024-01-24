@@ -60,35 +60,40 @@ module.exports = {
       where: {
         email: req.body.email
       }
-    }).then(user => {
-      if (!user) {
+    }).then(users => {
+      if (!users) {
         return apiResponse.errors(res, { message: "User Not found." }, 404);
       }
 
       var passwordIsValid = bcrypt.compareSync(
         req.body.password,
-        user.password
+        users.password
       );
 
       if (!passwordIsValid) {
         return apiResponse.errors(res, { message: "Invalid Password!" }, 401);
       }
 
-      var token = jwt.sign({ id: user.id }, config.secret, {
+      var token = jwt.sign({ 
+        id: users.id, 
+        name: users.name, 
+        email: users.email, 
+        role_id: users.roleId
+       }, config.secret, {
         expiresIn: 86400 // 24 hours
       });
 
       var authorities = [];
       role.findOne({
         where: {
-          id: user.roleId
+          id: users.roleId
         }
       }).then(roles => {
         authorities.push("ROLE_" + roles.role.toUpperCase());
         return apiResponse.success(res, {
-          id: user.id,
-          name: user.name,
-          email: user.email,
+          id: users.id,
+          name: users.name,
+          email: users.email,
           roles: authorities,
           token_type: 'Bearer',
           access_token: token
@@ -114,13 +119,16 @@ module.exports = {
 
       const decoded = jwt.verify(token, config.secret);
       const data = decoded;
-      const users = await user.findOne({ where: { token: token, email: data.email } });
+      const users = await user.findOne(
+        { 
+          attributes: ["id", "name", "email", "role_id", "created_at", "updated_at"],
+          where: { email: data.email } 
+        }
+      );
 
       if (user === null) {
         return apiResponse.errors(res, { message: "Unauthorized" }, 401);
       }
-
-      await users.update({ token: "", updated_at: new Date() });
 
       return apiResponse.success(res, {
         token: null,

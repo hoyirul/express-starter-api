@@ -10,6 +10,76 @@ const userController = require('../controllers/api/user.controller');
 const roleController = require('../controllers/api/role.controller');
 
 // For auth API
+/*
+@swagger
+tags:
+  name: Auth
+  description: Auth API
+
+paths:
+  /api/auth/signup:
+    post:
+      tags: [Auth]
+      summary: Signup
+      description: Signup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Name
+                  example: John Doe
+                email:
+                  type: string
+                  description: Email
+                  example:
+                password:
+                  type: string
+                  description: Password
+                  example: 123456
+                roles:
+                  type: string
+                  description: Roles
+                  example: 1
+      responses:
+        "200":
+          description: Signup
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Message
+                    example: User was registered successfully!
+        "422":
+          description: Validation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Message
+                    example: Failed! Email is already in use!
+        "500":
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Message
+                    example: Server Error
+*/
 router.post(
   "/auth/signup",
   [
